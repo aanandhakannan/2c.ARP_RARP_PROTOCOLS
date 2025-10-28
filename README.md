@@ -47,9 +47,57 @@ while True:
 c.close()
 s.close()
 ```
+```
+client.py
+import socket
+
+s = socket.socket()
+s.connect(('localhost', 8000))
+
+while True:
+    ip = input("Enter logical Address : ")
+    if ip.lower() in ['exit', 'quit']:
+        break
+    s.send(ip.encode())
+    print("MAC Address:", s.recv(1024).decode())
+
+s.close()
+```
+## Output
+<img width="1007" height="386" alt="image" src="https://github.com/user-attachments/assets/bcfac8bf-d474-43cb-9885-a172b684a9f4" />
 
 ## PROGRAM - RARP
 ```
+Server.py
+import socket
+
+s = socket.socket()
+s.bind(('localhost', 9000))
+s.listen(5)
+print("RARP Server listening on port 9000...")
+
+c, addr = s.accept()
+print("Connection from:", addr)
+
+address = {
+    "6A:08:AA:C2": "192.168.1.100",
+    "8A:BC:E3:FA": "192.168.1.99"
+}
+
+while True:
+    mac = c.recv(1024).decode()
+    if not mac:
+        break
+    try:
+        c.send(address[mac].encode())
+    except KeyError:
+        c.send("Not Found".encode())
+
+c.close()
+s.close()
+```
+```
+client.py
 import socket
 
 s = socket.socket()
@@ -65,7 +113,8 @@ while True:
 s.close()
 ```
 ## OUTPUT
-<img width="1007" height="386" alt="image" src="https://github.com/user-attachments/assets/bcfac8bf-d474-43cb-9885-a172b684a9f4" />
+<img width="964" height="293" alt="Screenshot 2025-10-28 083517" src="https://github.com/user-attachments/assets/cc096971-8793-4258-b2f0-0caa2f810c95" />
+
 
 ## RESULT
 Thus, the python program for simulating ARP protocols using TCP was successfully 
